@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Consulta Logradouro pelo CEP</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+      }
+      .container {
+        width: 300px;
+        background-color: #999;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      h2 {
+        text-align: center;
+        color: #000;
+      }
+      .field {
+        margin-bottom: 10px;
+      }
+      .field label {
+        display: block;
+        margin-bottom: 3px;
+        color: #000;
+      }
+      .field input {
+        width: 100%;
+        padding: 6px;
+        border-radius: 4px;
+        border: 1px solid #000;
+      }
+      button {
+        width: 100%;
+        padding: 6px;
+        background-color: #000;
+        color: #fff;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #333;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h2>Consulta Logradouro pelo CEP</h2>
+      <div class="field">
+        <label for="cep">CEP</label>
+        <input type="text" id="cep" placeholder="Digite o CEP" />
+      </div>
+      <button onclick="buscarCEP()">Buscar</button>
+      <div class="field">
+        <label for="logradouro">Logradouro</label>
+        <input type="text" id="logradouro" readonly />
+      </div>
+      <div class="field">
+        <label for="numero">Número</label>
+        <input type="text" id="numero" />
+      </div>
+      <div class="field">
+        <label for="complemento">Complemento</label>
+        <input type="text" id="complemento" readonly />
+      </div>
+      <div class="field">
+        <label for="bairro">Bairro</label>
+        <input type="text" id="bairro" readonly />
+      </div>
+      <div class="field">
+        <label for="cidade">Cidade</label>
+        <input type="text" id="cidade" readonly />
+      </div>
+      <div class="field">
+        <label for="uf">UF</label>
+        <input type="text" id="uf" readonly />
+      </div>
+    </div>
+
+    <script>
+      function buscarCEP() {
+        const cep = document.getElementById("cep").value.replace(/\D/g, "");
+        if (cep !== "") {
+          const url = `https://viacep.com.br/ws/${cep}/json/`;
+
+          fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+              if (!data.erro) {
+                document.getElementById("logradouro").value = data.logradouro;
+                document.getElementById("complemento").value = data.complemento;
+                document.getElementById("bairro").value = data.bairro;
+                document.getElementById("cidade").value = data.localidade;
+                document.getElementById("uf").value = data.uf;
+              } else {
+                alert("CEP não encontrado!");
+              }
+            })
+            .catch((error) => {
+              alert("Erro ao consultar o CEP");
+              console.error(error);
+            });
+        } else {
+          alert("Digite um CEP válido!");
+        }
+      }
+    </script>
+  </body>
+</html>
